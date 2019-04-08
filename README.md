@@ -1,9 +1,10 @@
 PyLFS
 =====
+**Originally Forked from [mgax/lfs](https://github.com/mgax/lfs)**
 
 A minimal Python implementation of [git-lfs](https://github.com/github/git-lfs). 
 
-[![Build Status](https://travis-ci.org/mgax/lfs.svg?branch=master)](https://travis-ci.org/mgax/lfs)
+[![Build Status](https://travis-ci.org/gneezyn/lfs.svg?branch=master)](https://travis-ci.org/gneezyn/lfs)
 
 ## Setup
 
@@ -14,7 +15,7 @@ pipenv --three install
 mkdir data
 git init --bare data/repo.git
 
-git clone https://github.com/mgax/lfs.git
+git clone https://github.com/gneezyn/lfs.git
 
 cat > lfs/settings.py <<EOF
 GIT_PROJECT_ROOT = '`pwd`/data'
