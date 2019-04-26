@@ -23,6 +23,7 @@ SERVER_URL = 'http://localhost:5000'
 EOF
 
 cd lfs
+pipenv install
 pipenv run python lfs.py
 ```
 
