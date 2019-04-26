@@ -38,3 +38,7 @@ git commit -m 'test data'
 git remote add origin http://foo:bar@localhost:5000/repo.git
 git push --set-upstream origin master
 ```
+
+## Configs
+`GIT_PROJECT_ROOT` - 
+`SERVER_URL` - the URL of the GitLFS Server (e.g., http://localhost:5000, http://example.com)

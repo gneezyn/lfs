@@ -1,14 +1,22 @@
 import sys
 import os
 import re
+
 from pathlib import Path
 from contextlib import contextmanager
 from tempfile import NamedTemporaryFile
+
 import waitress
 import flask
+
 from werkzeug.wsgi import responder, FileWrapper
 from werkzeug.wrappers import Request
 from paste.cgiapp import CGIApplication
+
+from globus_sdk import (NativeAppAuthClient, TransferClient,
+                        RefreshTokenAuthorizer, TransferData)
+from globus_sdk.exc import GlobusAPIError, TransferAPIError
+from fair_research_login import NativeClient
 
 def mkdir(p):
     """
@@ -30,7 +38,7 @@ class LFS:
     @contextmanager
     def save(self, oid):
         """
-        WIP: Saves OID and creates any necessary (parent) directories.
+        Creates any necessary (parent) directories.
         
         Decorator: contextmanager
         
@@ -39,7 +47,6 @@ class LFS:
 
         Returns: TBD
         """
-        print(self.root)
         mkdir(self.root)
 
         tmpdir = self.root / 'tmp'
@@ -82,7 +89,6 @@ def create_git_app(repo):
     git_http_backend = Path(__file__).parent.absolute() / 'git-http-backend'
     cgi = CGIApplication({}, str(git_http_backend))
 
-    # start_response may be unneccessary (does not seem to be used anywhere)
     @responder
     def git_app(environ, start_response):
         environ['GIT_PROJECT_ROOT'] = repo
@@ -107,9 +113,9 @@ def create_app(config_pyfile=None, config=None):
     "Route" Functions:
         lfs_objects -- creates/uploads lfs objects (WIP)
         lfs_get_oid -- retrieves information about a specific object?
-        batch -- TBD
-        upload -- updates? the repo (WIP)
-        download -- TBD
+        batch -- handles batch request(s)
+        upload -- handles the 'upload' request operation
+        download -- handles the 'download' request operation
 
     Returns: app (Flask object)
     """
@@ -170,6 +176,7 @@ def create_app(config_pyfile=None, config=None):
         Returns: [str] -- the url for the specified object in the repo.
         """
 
+        # example: http://localhost:5000/repo.git/lfs/<oid>
         return app.config['SERVER_URL'] + '/' + repo + '/lfs/' + oid
 
     @app.route('/<repo>/info/lfs/objects', methods=['POST'])
@@ -240,6 +247,7 @@ def create_app(config_pyfile=None, config=None):
         """
 
         req = flask.request.json
+        print("REQUEST")
         print(req)
         lfs_repo = open_lfs(repo)
 
@@ -316,7 +324,6 @@ def create_app(config_pyfile=None, config=None):
                 'transfer': 'basic',
                 'objects': [respond(obj) for obj in req['objects']],
             }
-
             return flask.jsonify(resp), 200, headers
 
         else:
