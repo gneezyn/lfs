@@ -39,6 +39,7 @@ class LFS:
 
         Returns: TBD
         """
+        print(self.root)
         mkdir(self.root)
 
         tmpdir = self.root / 'tmp'
@@ -239,6 +240,7 @@ def create_app(config_pyfile=None, config=None):
         """
 
         req = flask.request.json
+        print(req)
         lfs_repo = open_lfs(repo)
 
         if req['operation'] == 'download':
@@ -369,7 +371,6 @@ def runserver(host, port, **kwargs):
     """
 
     app = create_app(**kwargs)
-
     def serve():
         from paste.translogger import TransLogger
         wsgi = TransLogger(app.wsgi_app)

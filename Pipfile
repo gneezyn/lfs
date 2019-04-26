@@ -9,3 +9,6 @@ pytest = "*"
 waitress = "*"
 Paste = "*"
 PyYAML = "*"
+
+[dev-packages]
+pylint = "*"
