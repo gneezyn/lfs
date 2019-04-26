@@ -378,6 +378,8 @@ def runserver(host, port, **kwargs):
     """
 
     app = create_app(**kwargs)
+    if app.config.get('HOST'):
+        host = app.config.get('HOST')
     def serve():
         from paste.translogger import TransLogger
         wsgi = TransLogger(app.wsgi_app)
