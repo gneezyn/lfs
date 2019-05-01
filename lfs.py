@@ -18,6 +18,8 @@ from globus_sdk import (NativeAppAuthClient, TransferClient,
 from globus_sdk.exc import GlobusAPIError, TransferAPIError
 from fair_research_login import NativeClient
 
+CLIENT_ID = '079bdf4e-9666-4816-ac01-7eab9dc82b93'
+
 def mkdir(p):
     """
     Creates a new directory p, unless the directory already exists.
@@ -261,13 +263,18 @@ def create_app(config_pyfile=None, config=None):
                 Arguments:
                     obj [object] -- an LFS(?) object
                 
-                Returns: [JSON] -- either the response data for a file OR an error (response); in JSON format
+                Returns: [JSON] -- either the response data OR an error (response)
                 """
 
                 oid = obj['oid']
                 oid_path = lfs_repo.path(oid)
                 url = data_url(repo, oid)
                 if oid_path.is_file():
+                    # oid and size are the same as from the request
+                    # action is download
+                    # href specifies url where the object can be downloaded from
+                    # if authorization is needed, should be added as header (under download action)
+                        # example: "header": {"Authorization": "JWT eyJ0eXA...",}
                     return {
                         'oid': oid,
                         'size': oid_path.stat().st_size,
