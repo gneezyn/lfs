@@ -46,4 +46,5 @@ git push --set-upstream origin master
 
 ## Configs
 `GIT_PROJECT_ROOT` - 
+
 `SERVER_URL` - the URL of the GitLFS Server (e.g., http://localhost:5000, http://example.com)
